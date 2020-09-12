@@ -115,6 +115,7 @@ var Configuration = map[string]PathConfig{
 	"python3.8":   Allowed,
         "locale":      Allowed,
 	"ccache":      Allowed,
+	"brotli":      Allowed,
 	"arm-linux-androidkernel-as": Allowed,
 	"arm-linux-androidkernel-ld": Allowed,
 	// Host toolchain is removed. In-tree toolchain should be used instead.
