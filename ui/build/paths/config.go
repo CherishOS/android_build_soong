@@ -78,6 +78,7 @@ var Configuration = map[string]PathConfig{
 	"ccache":  Allowed,
 	"brotli":  Allowed,
 	"cpio":    Allowed,
+	"curl":    Allowed,
 	"date":    Allowed,
 	"depmod":  Allowed,
 	"dd":      Allowed,
