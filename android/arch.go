@@ -145,8 +145,6 @@ var archVariants = map[ArchType][]string{
 		"kryo300",
 		"kryo385",
 		"kryo585",
-		"exynos-m1",
-		"exynos-m2",
 	},
 	Mips: {
 		"mips32_fp",
