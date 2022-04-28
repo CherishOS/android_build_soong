@@ -125,6 +125,7 @@ var Configuration = map[string]PathConfig{
 	"llvm-ar": Allowed,
 	"m4":      Allowed,
 	"perl":    Allowed,
+	"soong_zip": Allowed,
 	"arm-linux-androidkernel-as": Allowed,
 	"arm-linux-androidkernel-ld": Allowed,
 	// Host toolchain is removed. In-tree toolchain should be used instead.
