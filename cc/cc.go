@@ -2428,6 +2428,20 @@ func rewriteLibsForApiImports(c LinkableInterface, libs []string, replaceList ma
 	return nonVariantLibs, variantLibs
 }
 
+func RewriteHeaderLibs(c LinkableInterface, snapshotInfo **SnapshotInfo, actx android.BottomUpMutatorContext, config android.Config, list []string) (newHeaderLibs []string) {
+	newHeaderLibs = []string{}
+	for _, entry := range list {
+		// Replace device_kernel_headers with generated_kernel_headers
+		// for inline kernel building
+		if entry == "device_kernel_headers" || entry == "qti_kernel_headers" {
+			newHeaderLibs = append(newHeaderLibs, "generated_kernel_headers")
+			continue
+		}
+		newHeaderLibs = append(newHeaderLibs, entry)
+	}
+	return newHeaderLibs
+}
+
 func (c *Module) shouldUseApiSurface() bool {
 	if c.Os() == android.Android && c.Target().NativeBridge != android.NativeBridgeEnabled {
 		if GetImageVariantType(c) == vendorImageVariant || GetImageVariantType(c) == productImageVariant {
@@ -2483,6 +2497,8 @@ func (c *Module) DepsMutator(actx android.BottomUpMutatorContext) {
 	variantNdkLibs := []string{}
 	variantLateNdkLibs := []string{}
 	if ctx.Os() == android.Android {
+		deps.HeaderLibs = RewriteHeaderLibs(c, &snapshotInfo, actx, ctx.Config(), deps.HeaderLibs)
+
 		deps.SharedLibs, variantNdkLibs = RewriteLibs(c, &snapshotInfo, actx, ctx.Config(), deps.SharedLibs)
 		deps.LateSharedLibs, variantLateNdkLibs = RewriteLibs(c, &snapshotInfo, actx, ctx.Config(), deps.LateSharedLibs)
 		deps.ReexportSharedLibHeaders, _ = RewriteLibs(c, &snapshotInfo, actx, ctx.Config(), deps.ReexportSharedLibHeaders)
