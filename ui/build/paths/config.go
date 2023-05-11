@@ -120,6 +120,7 @@ var Configuration = map[string]PathConfig{
 	"perl":        Allowed,
 	"ld.lld":      Allowed,
 	"llvm-ar":     Allowed,
+	"aarch64-linux-gnu-ld":    Allowed,
 	"llvm-addr2line":  Allowed,
 	"arm-linux-androidkernel-as": Allowed,
 	"arm-linux-androidkernel-ld": Allowed,
