@@ -124,6 +124,7 @@ var Configuration = map[string]PathConfig{
 	"ld.lld":  Allowed,
 	"llvm-ar": Allowed,
 	"m4":      Allowed,
+	"pahole":   Allowed,
 	"perl":    Allowed,
 	"soong_zip": Allowed,
 	"arm-linux-androidkernel-as": Allowed,
