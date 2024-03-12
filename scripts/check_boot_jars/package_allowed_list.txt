@@ -274,6 +274,14 @@ org\.lineageos\.platform\.internal
 com\.nothing
 com\.nothing\..*
 
+# Lineage adds
+lineageos\.platform
+org\.lineageos\.platform\.internal
+vendor\.lineage\..*
+vendor\.lineage\.health.*
+vendor\.lineage\.livedisplay.*
+vendor\.lineage\.touch.*
+
 # Cherish adds
 com.cherish.*
 vendor.cherish.*
