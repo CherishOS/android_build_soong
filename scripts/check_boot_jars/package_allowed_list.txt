@@ -289,6 +289,9 @@ org\.codeaurora\.internal.*
 # IFAA Manager used for Alipay and/or WeChat payment
 org\.ifaa\.android\.manager.*
 
+# OPLUS adds
+com\.oplus\..*
+
 # QC adds
 com.qualcomm.qti
 com.quicinc.tcmiface
