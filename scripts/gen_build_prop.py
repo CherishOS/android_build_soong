@@ -333,12 +333,11 @@ def append_additional_system_props(args):
   # mount system_other partition.
   props.append("ro.postinstall.fstab.prefix=/system")
 
-  enable_target_debugging = True
-  enable_dalvik_lock_contention_logging = True
+  enable_target_debugging = False
+  enable_dalvik_lock_contention_logging = False
   if config["BuildVariant"] == "user" or config["BuildVariant"] == "userdebug":
     # Target is secure in user builds.
     props.append("ro.secure=1")
-    props.append("security.perf_harden=1")
 
     if config["BuildVariant"] == "user":
       # Disable debugging in plain user builds.
@@ -355,7 +354,7 @@ def append_additional_system_props(args):
     props.append("ro.allow.mock.location=0")
   else:
     # Turn on checkjni for non-user builds.
-    props.append("ro.kernel.android.checkjni=1")
+    props.append("ro.kernel.android.checkjni=0")
     # Set device insecure for non-user builds.
     props.append("ro.secure=0")
     # Allow mock locations by default for non user builds
