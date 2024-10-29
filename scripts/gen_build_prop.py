@@ -262,6 +262,9 @@ def generate_build_info(args):
   print(f"persist.sys.pihooks_FINGERPRINT={config['PihooksGmsFp']}")
   print(f"persist.sys.pihooks_MODEL={config['PihooksGmsModel']}")
 
+  print(f"persist.sys.pihooks_FINGERPRINT={config['PihooksGmsFp']}")
+  print(f"persist.sys.pihooks_MODEL={config['PihooksGmsModel']}")
+
   # These values are deprecated, use "ro.product.cpu.abilist"
   # instead (see below).
   print(f"# ro.product.cpu.abi and ro.product.cpu.abi2 are obsolete,")
