@@ -43,7 +43,7 @@ def get_build_keys(product_config):
   default_cert = product_config.get("DefaultAppCertificate", "")
   if default_cert == "" or default_cert == os.path.join(TEST_KEY_DIR, "testKey"):
     return "test-keys"
-  return "dev-keys"
+  return "release-keys"
 
 def parse_args():
   """Parse commandline arguments."""
