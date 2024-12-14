@@ -59,9 +59,9 @@ def override_config(config):
 
     for key, value in props_overrides.items():
       if key not in config:
-        print(f"Key \"{key}\" isn't a valid prop override", file=sys.stderr)
-        sys.exit(1)
-      config[key] = value
+        print(f"Key \"{key}\" isn't a valid prop override", file=sys.stdout)
+      else:
+        config[key] = value
 
 def parse_args():
   """Parse commandline arguments."""
