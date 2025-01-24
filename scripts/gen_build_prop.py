@@ -412,6 +412,10 @@ def append_additional_system_props(args):
   # This property is set by flashing debug boot image, so default to false.
   props.append("ro.force.debuggable=0")
 
+  if config["BuildVariant"] == "user":
+    # at least one app (Revolut) refuses to work with yellow verifiedbootstate
+    props.append("ro.appcompat_override.ro.boot.verifiedbootstate=green")
+
   config["ADDITIONAL_SYSTEM_PROPERTIES"] = props
 
 def append_additional_vendor_props(args):
