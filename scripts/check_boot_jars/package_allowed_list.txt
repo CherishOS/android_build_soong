@@ -274,6 +274,10 @@ org\.lineageos\.platform\.internal
 com\.nothing
 com\.nothing\..*
 
+# Cherish adds
+com.cherish.*
+vendor.cherish.*
+
 # NV adds
 com\.nvidia
 com\.nvidia\..*
