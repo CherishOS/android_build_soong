@@ -278,6 +278,10 @@ vendor\.lineage\.health.*
 vendor\.lineage\.livedisplay.*
 vendor\.lineage\.touch.*
 
+# Cherish adds
+com.cherish.*
+vendor.cherish.*
+
 ###################################################
 # CodeAurora IMS functionality needed by frameworks/opt/telephony
 # as part of "ims-ext-common"
