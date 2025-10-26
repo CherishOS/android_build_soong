@@ -47,6 +47,12 @@ def get_build_keys(product_config):
     return "release-keys"
   return "dev-keys"
 
+def limit_api_level(value):
+    try:
+        return min(int(value), 32)
+    except Exception:
+        return 32
+
 def override_config(config):
   if "PRODUCT_BUILD_PROP_OVERRIDES" in config:
     current_key = None
@@ -470,7 +476,7 @@ def append_additional_vendor_props(args):
     props.append(f"ro.boot.dynamic_partitions_retrofit={'true' if config['RetrofitDynamicPartitions'] else 'false'}")
 
   if config["ShippingApiLevel"]:
-    props.append(f"ro.product.first_api_level={config['ShippingApiLevel']}")
+    props.append(f"ro.product.first_api_level={limit_api_level(config['ShippingApiLevel'])}")
 
   if config["BuildVariant"] != "user" and config["BuildDebugfsRestrictionsEnabled"]:
     props.append(f"ro.product.debugfs_restrictions.enabled=true")
@@ -479,7 +485,7 @@ def append_additional_vendor_props(args):
   # This must not be defined for the non-GRF devices.
   # The values of the GRF properties will be verified by post_process_props.py
   if config["BoardShippingApiLevel"]:
-    props.append(f"ro.board.first_api_level={config['BoardShippingApiLevel']}")
+    props.append(f"ro.board.first_api_level={limit_api_level(config['BoardShippingApiLevel'])}")
 
   # Build system set BOARD_API_LEVEL to show the api level of the vendor API surface.
   # This must not be altered outside of build system.
