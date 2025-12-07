@@ -16,7 +16,7 @@
 
 # Common script utilities
 source $(cd $(dirname $BASH_SOURCE) &> /dev/null && pwd)/../../make/shell_utils.sh
-source $ANDROID_BUILD_TOP/vendor/lineage/build/soong/bin/hmm
+source $ANDROID_BUILD_TOP/vendor/cherish/build/soong/bin/hmm
 
 cat <<EOF
 
@@ -81,7 +81,7 @@ Look at the source to view more functions. The complete list is:
 EOF
     T=$(gettop)
     A=""
-    for i in `cat $T/build/envsetup.sh $T/vendor/lineage/build/envsetup.sh | sed -n "/^[[:blank:]]*function /s/function \([a-z_]*\).*/\1/p" | sort | uniq`; do
+    for i in `cat $T/build/envsetup.sh $T/vendor/cherish/build/envsetup.sh | sed -n "/^[[:blank:]]*function /s/function \([a-z_]*\).*/\1/p" | sort | uniq`; do
       A="$A $i"
     done
     echo $A
