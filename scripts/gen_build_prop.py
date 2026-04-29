@@ -112,8 +112,8 @@ def parse_args():
   config["BuildVersionTags"] = build_version_tags
 
   raw_date = args.date_file.read().strip()
-  config["Date"] = subprocess.check_output(["date", "-d", f"@{raw_date}"], text=True).strip()
-  config["DateUtc"] = subprocess.check_output(["date", "-d", f"@{raw_date}", "+%s"], text=True).strip()
+  config["Date"] = subprocess.check_output(["date", "-ud", f"@{raw_date}"], text=True).strip()
+  config["DateUtc"] = subprocess.check_output(["date", "-ud", f"@{raw_date}", "+%s"], text=True).strip()
 
   # build_desc is human readable strings that describe this build. This has the same info as the
   # build fingerprint.
@@ -132,6 +132,9 @@ def parse_args():
 
   if config["BuildNumber"].startswith("eng."):
     config["BuildNumber"] = config["DateUtc"]
+
+  config["PihooksGmsFp"] = ""
+  config["PihooksGmsModel"] = ""
 
   override_config(config)
 
@@ -358,6 +361,8 @@ def append_additional_system_props(args):
     # Target is secure in user builds.
     props.append("ro.secure=1")
     props.append("security.perf_harden=1")
+    # at least one app (Revolut) refuses to work with yellow verifiedbootstate
+    props.append("ro.appcompat_override.ro.boot.verifiedbootstate=green")
 
     if config["BuildVariant"] == "user":
       # Disable debugging in plain user builds.

@@ -279,6 +279,7 @@ func (app *AndroidApp) PrepareAndroidMKProviderInfo(config android.Config) *andr
 		OutputFile: android.OptionalPathForPath(app.outputFile),
 		Include:    "$(BUILD_SYSTEM)/soong_app_prebuilt.mk",
 		Required:   app.requiredModuleNames,
+
 	}
 	// App module names can be overridden.
 	info.PrimaryInfo.OverrideName = app.installApkName

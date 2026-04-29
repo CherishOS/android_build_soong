@@ -94,11 +94,13 @@ var cpuVariants = map[ArchType][]string{
 		"cortex-a76",
 		"krait",
 		"kryo",
+		"kryo300",
 		"kryo385",
 		"exynos-m1",
 		"exynos-m2",
 	},
 	Arm64: {
+		"cortex-a510",
 		"cortex-a53",
 		"cortex-a55",
 		"cortex-a72",
@@ -106,7 +108,9 @@ var cpuVariants = map[ArchType][]string{
 		"cortex-a75",
 		"cortex-a76",
 		"kryo",
+		"kryo300",
 		"kryo385",
+		"kryo785",
 		"exynos-m1",
 		"exynos-m2",
 		"oryon",
@@ -118,6 +122,7 @@ var cpuVariants = map[ArchType][]string{
 // Lists all possible optional features for each architecture.
 var archFeatures = map[ArchType][]string{
 	Arm: {
+
 		// Software implementation of ceil/floor is needed in libm
 		"soft_ceil_floor",
 	},
@@ -154,6 +159,7 @@ var archFeatures = map[ArchType][]string{
 // for each value of TARGET_ARCH_VARIANT.
 var androidArchFeatureMap = map[ArchType]map[string][]string{
 	Arm: {
+
 		"armv7-a-neon": {
 			"soft_ceil_floor",
 		},

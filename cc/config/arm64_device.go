@@ -56,6 +56,9 @@ var (
 	arm64Cppflags = []string{}
 
 	arm64CpuVariantCflags = map[string][]string{
+		"cortex-a510": []string{
+			"-mcpu=cortex-a510",
+		},
 		"cortex-a53": []string{
 			"-mcpu=cortex-a53",
 		},
@@ -63,21 +66,18 @@ var (
 			"-mcpu=cortex-a55",
 		},
 		"cortex-a75": []string{
-			// Use the cortex-a55 since it is similar to the little
-			// core (cortex-a55) and is sensitive to ordering.
-			"-mcpu=cortex-a55",
+			"-mcpu=cortex-a75+crypto+crc",
 		},
 		"cortex-a76": []string{
-			// Use the cortex-a55 since it is similar to the little
-			// core (cortex-a55) and is sensitive to ordering.
-			"-mcpu=cortex-a55",
+			"-mcpu=cortex-a76+crypto+crc",
 		},
 		"kryo": []string{
 			"-mcpu=kryo",
 		},
 		"kryo385": []string{
-			// Use cortex-a53 because kryo385 is not supported in clang.
-			"-mcpu=cortex-a53",
+			// Use cortex-a75 because kryo385 is not supported in GCC/clang.
+			// kryo385 does not support dot product feature.
+			"-mcpu=cortex-a75+nodotprod",
 		},
 		"exynos-m1": []string{
 			"-mcpu=exynos-m1",
@@ -111,9 +111,12 @@ func init() {
 		pctx.StaticVariable("Arm64"+variant+"VariantCflags", strings.Join(cflags, " "))
 	}
 
+        pctx.StaticVariable("Arm64CortexA510Cflags", strings.Join(arm64CpuVariantCflags["cortex-a510"], " "))
 	pctx.StaticVariable("Arm64CortexA53Cflags", strings.Join(arm64CpuVariantCflags["cortex-a53"], " "))
 	pctx.StaticVariable("Arm64CortexA55Cflags", strings.Join(arm64CpuVariantCflags["cortex-a55"], " "))
+	pctx.StaticVariable("Arm64CortexA76Cflags", strings.Join(arm64CpuVariantCflags["cortex-a76"], " "))
 	pctx.StaticVariable("Arm64KryoCflags", strings.Join(arm64CpuVariantCflags["kryo"], " "))
+	pctx.StaticVariable("Arm64Kryo385Cflags", strings.Join(arm64CpuVariantCflags["kryo385"], " "))
 	pctx.StaticVariable("Arm64ExynosM1Cflags", strings.Join(arm64CpuVariantCflags["exynos-m1"], " "))
 	pctx.StaticVariable("Arm64ExynosM2Cflags", strings.Join(arm64CpuVariantCflags["exynos-m2"], " "))
 
@@ -122,14 +125,15 @@ func init() {
 
 var (
 	arm64CpuVariantCflagsVar = map[string]string{
+		"cortex-a510": "${config.Arm64CortexA510Cflags}",
 		"cortex-a53": "${config.Arm64CortexA53Cflags}",
 		"cortex-a55": "${config.Arm64CortexA55Cflags}",
 		"cortex-a72": "${config.Arm64CortexA53Cflags}",
 		"cortex-a73": "${config.Arm64CortexA53Cflags}",
 		"cortex-a75": "${config.Arm64CortexA55Cflags}",
-		"cortex-a76": "${config.Arm64CortexA55Cflags}",
+		"cortex-a76": "${config.Arm64CortexA76Cflags}",
 		"kryo":       "${config.Arm64KryoCflags}",
-		"kryo385":    "${config.Arm64CortexA53Cflags}",
+		"kryo385":    "${config.Arm64Kryo385Cflags}",
 		"exynos-m1":  "${config.Arm64ExynosM1Cflags}",
 		"exynos-m2":  "${config.Arm64ExynosM2Cflags}",
 	}

@@ -289,12 +289,32 @@ vendor.cherish.*
 com\.nothing
 com\.nothing\..*
 
+# Lineage adds
+lineageos\.platform
+org\.lineageos\.platform\.internal
+vendor\.lineage\..*
+vendor\.lineage\.health.*
+vendor\.lineage\.livedisplay.*
+vendor\.lineage\.touch.*
+
+# Cherish adds
+com.cherish.*
+vendor.cherish.*
+
 # NV adds
 com\.nvidia
 com\.nvidia\..*
 
 # OPLUS adds
 com\.oplus\..*
+net.oneplus.*
+oplus.*
+vendor.oplus.*
+com.oneplus.*
+vendor.oneplus.*
+
+# LMOFreeform
+com\.libremobileos\..*
 
 # QC adds
 com.qualcomm.qti
@@ -308,3 +328,4 @@ qcom.fmradio
 ###################################################
 # IFAA Manager used for Alipay and/or WeChat payment
 org\.ifaa\.android\.manager.*
+org\.ifaa\.aidl.*
