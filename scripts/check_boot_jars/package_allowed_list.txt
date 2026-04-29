@@ -281,6 +281,10 @@ mediatek\..*
 vendor\.mediatek
 vendor\.mediatek\..*
 
+# Cherish adds
+com.cherish.*
+vendor.cherish.*
+
 # NT adds
 com\.nothing
 com\.nothing\..*
