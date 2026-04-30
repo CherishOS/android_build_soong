@@ -34,7 +34,7 @@ type Sandbox struct {
 var (
 	noSandbox    = Sandbox{}
 	basicSandbox = Sandbox{
-		Enabled: false,
+		Enabled: true,
 	}
 
 	dumpvarsSandbox = basicSandbox
