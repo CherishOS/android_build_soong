@@ -52,7 +52,7 @@ func init() {
 type toolchainRiscv64 struct {
 	toolchain64Bit
 	toolchainRustFlags string
-	lldflags string
+	ldflags            string
 }
 
 func (t *toolchainRiscv64) RustTriple() string {
@@ -61,7 +61,7 @@ func (t *toolchainRiscv64) RustTriple() string {
 
 func (t *toolchainRiscv64) ToolchainLinkFlags() string {
 	// Prepend the lld flags from cc_config so we stay in sync with cc
-	return "${config.DeviceGlobalLinkFlags} " + t.lldflags + " ${config.Riscv64ToolchainLinkFlags}"
+	return "${config.DeviceGlobalLinkFlags} " + t.ldflags + " ${config.Riscv64ToolchainLinkFlags}"
 }
 
 func (t *toolchainRiscv64) ToolchainRustFlags() string {
@@ -98,6 +98,6 @@ func Riscv64ToolchainFactory(arch android.Arch) Toolchain {
 
 	return &toolchainRiscv64{
 		toolchainRustFlags: strings.Join(toolchainRustFlags, " "),
-		lldflags: strings.ReplaceAll(cc_toolchain.Lldflags(), "${config.", "${cc_config."),
+		ldflags:            strings.ReplaceAll(cc_toolchain.Ldflags(), "${config.", "${cc_config."),
 	}
 }

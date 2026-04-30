@@ -88,6 +88,13 @@ def parse_args():
   args.config = json.load(args.product_config)
   config = args.config
 
+  if args.partition == "system":
+    config['ProductBrand'] = config['SystemBrand']
+    config['DeviceName'] = config['SystemDevice']
+    config['ProductManufacturer'] = config['SystemManufacturer']
+    config['ProductModel'] = config['SystemModel']
+    config['DeviceProduct'] = config['SystemName']
+
   config["BuildFlavor"] = get_build_flavor(config)
   config["BuildKeys"] = get_build_keys(config)
   config["BuildVariant"] = get_build_variant(config)
@@ -105,8 +112,8 @@ def parse_args():
   config["BuildVersionTags"] = build_version_tags
 
   raw_date = args.date_file.read().strip()
-  config["Date"] = subprocess.check_output(["date", "-ud", f"@{raw_date}"], text=True).strip()
-  config["DateUtc"] = subprocess.check_output(["date", "-ud", f"@{raw_date}", "+%s"], text=True).strip()
+  config["Date"] = subprocess.check_output(["date", "-d", f"@{raw_date}"], text=True).strip()
+  config["DateUtc"] = subprocess.check_output(["date", "-d", f"@{raw_date}", "+%s"], text=True).strip()
 
   # build_desc is human readable strings that describe this build. This has the same info as the
   # build fingerprint.
@@ -126,9 +133,6 @@ def parse_args():
   if config["BuildNumber"].startswith("eng."):
     config["BuildNumber"] = config["DateUtc"]
 
-  config["PihooksGmsFp"] = ""
-  config["PihooksGmsModel"] = ""
-
   override_config(config)
 
   append_additional_system_props(args)
@@ -147,18 +151,11 @@ def generate_common_build_props(args):
   build_flags = config["BuildFlags"]
   partition = args.partition
 
-  if partition == "system":
-    print(f"ro.product.{partition}.brand={config['SystemBrand']}")
-    print(f"ro.product.{partition}.device={config['SystemDevice']}")
-    print(f"ro.product.{partition}.manufacturer={config['SystemManufacturer']}")
-    print(f"ro.product.{partition}.model={config['SystemModel']}")
-    print(f"ro.product.{partition}.name={config['SystemName']}")
-  else:
-    print(f"ro.product.{partition}.brand={config['ProductBrand']}")
-    print(f"ro.product.{partition}.device={config['DeviceName']}")
-    print(f"ro.product.{partition}.manufacturer={config['ProductManufacturer']}")
-    print(f"ro.product.{partition}.model={config['ProductModel']}")
-    print(f"ro.product.{partition}.name={config['DeviceProduct']}")
+  print(f"ro.product.{partition}.brand={config['ProductBrand']}")
+  print(f"ro.product.{partition}.device={config['DeviceName']}")
+  print(f"ro.product.{partition}.manufacturer={config['ProductManufacturer']}")
+  print(f"ro.product.{partition}.model={config['ProductModel']}")
+  print(f"ro.product.{partition}.name={config['DeviceProduct']}")
 
   if partition != "system":
     if config["ProductModelForAttestation"]:
@@ -210,14 +207,10 @@ def generate_build_info(args):
 
   print(f"ro.build.fingerprint?={config['BuildFingerprint']}")
 
-  # The ro.build.id will be set dynamically by init, by appending the unique vbmeta digest.
-  if config["BoardUseVbmetaDigestInFingerprint"]:
-    print(f"ro.build.legacy.id={config['BuildId']}")
-  else:
-    print(f"ro.build.id?={config['BuildId']}")
+  print(f"ro.build.id?={config['BuildId']}")
 
   # ro.build.display.id is shown under Settings -> About Phone
-  if config["BuildVariant"] == "user":
+  if config["BuildVariant"] != "eng":
     # User builds should show:
     # release build number or branch.buld_number non-release builds
 
@@ -256,14 +249,7 @@ def generate_build_info(args):
   # flavor (via a dedicated lunch config for example).
   print(f"ro.build.flavor={config['BuildFlavor']}")
 
-  print(f"ro.lineage.device={config['LineageDevice']}")
   print(f"ro.cherish.device={config['LineageDevice']}")
-
-  print(f"persist.sys.pihooks_FINGERPRINT={config['PihooksGmsFp']}")
-  print(f"persist.sys.pihooks_MODEL={config['PihooksGmsModel']}")
-
-  print(f"persist.sys.pihooks_FINGERPRINT={config['PihooksGmsFp']}")
-  print(f"persist.sys.pihooks_MODEL={config['PihooksGmsModel']}")
 
   # These values are deprecated, use "ro.product.cpu.abilist"
   # instead (see below).
@@ -276,9 +262,6 @@ def generate_build_info(args):
   if config["ProductLocales"]:
     print(f"ro.product.locale={config['ProductLocales'][0]}")
   print(f"ro.wifi.channels={' '.join(config['ProductDefaultWifiChannels'])}")
-
-  print(f"# ro.build.product is obsolete; use ro.product.device")
-  print(f"ro.build.product={config['DeviceName']}")
 
   print(f"# Do not try to parse description or thumbprint")
   print(f"ro.build.description?={config['BuildDesc']}")
@@ -375,8 +358,6 @@ def append_additional_system_props(args):
     # Target is secure in user builds.
     props.append("ro.secure=1")
     props.append("security.perf_harden=1")
-    # at least one app (Revolut) refuses to work with yellow verifiedbootstate
-    props.append("ro.appcompat_override.ro.boot.verifiedbootstate=green")
 
     if config["BuildVariant"] == "user":
       # Disable debugging in plain user builds.
@@ -466,6 +447,9 @@ def append_additional_vendor_props(args):
   if config["RecoveryPixelFormat"]:
     props.append(f"ro.minui.pixel_format={config['RecoveryPixelFormat']}")
 
+  if "RecoveryNoInitialModsetFlush" in config:
+    props.append(f"ro.minui.no_initial_modset_flush={'true' if config['RecoveryNoInitialModsetFlush'] else 'false'}")
+
   if "UseDynamicPartitions" in config:
     props.append(f"ro.boot.dynamic_partitions={'true' if config['UseDynamicPartitions'] else 'false'}")
 
@@ -475,11 +459,9 @@ def append_additional_vendor_props(args):
   if config["ShippingApiLevel"]:
     props.append(f"ro.product.first_api_level={config['ShippingApiLevel']}")
 
-  if config["ShippingVendorApiLevel"]:
-    props.append(f"ro.vendor.api_level={config['ShippingVendorApiLevel']}")
-
-  if config["BuildVariant"] != "user" and config["BuildDebugfsRestrictionsEnabled"]:
-    props.append(f"ro.product.debugfs_restrictions.enabled=true")
+  if config["BuildVariant"] != "user":
+    if "BuildDebugfsRestrictionsEnabled" in config:
+        props.append(f"ro.product.debugfs_restrictions.enabled={'true' if config['BuildDebugfsRestrictionsEnabled'] else 'false'}")
 
   # Vendors with GRF must define BOARD_SHIPPING_API_LEVEL for the vendor API level.
   # This must not be defined for the non-GRF devices.
@@ -502,11 +484,6 @@ def append_additional_vendor_props(args):
   # to decide if VABC should be disabled.
   if config["DontUseVabcOta"]:
     props.append(f"ro.vendor.build.dont_use_vabc=true")
-
-  # Set the flag in vendor. So VTS would know if the new fingerprint format is in use when
-  # the system images are replaced by GSI.
-  if config["BoardUseVbmetaDigestInFingerprint"]:
-    props.append(f"ro.vendor.build.fingerprint_has_digest=1")
 
   props.append(f"ro.vendor.build.security_patch={config['VendorSecurityPatch']}")
   props.append(f"ro.product.board={config['BootloaderBoardName']}")
@@ -624,7 +601,10 @@ def build_product_prop(args):
   if config["UsesProductImage"]:
     gen_common_build_props = True
 
-  build_prop(args, gen_build_info=False, gen_common_build_props=True, variables=variables)
+  # Product is the most product-specific partition. So it is the best place to
+  # have the build info.
+  # Product props will be read for any duplicatied properties.
+  build_prop(args, gen_build_info=True, gen_common_build_props=gen_common_build_props, variables=variables)
 
   if config["OemProperties"]:
     print("####################################")
